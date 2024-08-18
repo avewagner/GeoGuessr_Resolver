@@ -1,4 +1,4 @@
-# Geogussr Location resolver and Instant Guesser.
+# Geogussr Location resolver 
 
 A small Javascript application which finds the correct location in the online game Geogussr.
 
@@ -13,11 +13,10 @@ After this, just simply add the code in Release.js as a new script.
 
 ## To use this script:
 
-- Press '1' in game to place a pin on a location that will randomly score you between 4500 to 5000 score. (pressing "guess" is required to guess)
+- Press '2' in game to send the location into the f12 console (google api key needed)
 
-- Press '2' in game to place a pin on a location that will exactly score 5000 points. (pressing "guess" is required to guess)
-
-- Press '3' in game to open Google Maps set on the correct location in a new tab.
+- Press '3' in game to send the location to a discord webhook (google api key and discord webhook link needed)
+- To create a google api key, https://developers.google.com/maps/documentation/javascript/get-api-key
 
 ## Credits:
 - https://nominatim.org - For providing an API to use to reverse lookup Latitude and Longitude coordinates.
@@ -26,9 +25,6 @@ After this, just simply add the code in Release.js as a new script.
 - https://stackoverflow.com/questions/2694640/find-an-element-in-dom-based-on-an-attribute-value - For showing me how to use the same HTML element to access required props, regardless of gamemode.
 
 # Disclaimer:
-This ***completely ruins the fun of the game***, I made this to experiment with creating Tampermonkey scripts to modify website behaviour and because it's fun to reverse engineer this stuff.
+This ***completely ruins the fun of the game***, I made this to experiment with creating Tampermonkey scripts to modify website behaviour, to learn api requests and http posts, and because it's fun to reverse engineer this stuff.
 
 <u>Please use at your own risk, and **don't ruin other's fun.** </u>
-
-## Demonstration:
-<img src="https://cdn.upload.systems/uploads/Wg827y99.gif"/>

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Geoguessr Location Resolver (Works in all modes)
+// @name         Geoguessr Location Resolver
 // @namespace    http://tampermonkey.net/
-// @version      12.4
-// @description  Features: Automatically score 5000 Points | Score randomly between 4500 and 5000 points | Open in Google Maps
+// @version      12.6
+// @description  Finds Geoguessr location, then sends to a webhook
 // @author       0x978
 // @match        https://www.geoguessr.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=geoguessr.com
@@ -15,7 +15,8 @@
 // Learn how I made this script: https://github.com/0x978/GeoGuessr_Resolver/blob/master/howIMadeTheScript.md
 // Contribute things you think will be cool once you learn: https://github.com/0x978/GeoGuessr_Resolver/pulls
 // ================================================================================================================
-
+let apikey = "INSERT_GOOGLE_API_KEY_HERE"
+let webhookURL = "INSERT_DISCORD_WEBHOOK_HERE"
 let globalCoordinates = { // keep this stored globally, and we'll keep updating it for each API call.
     lat: 0,
     lng: 0
@@ -57,80 +58,7 @@ XMLHttpRequest.prototype.open = function(method, url) {
 
 // ====================================Placing Marker====================================
 
-function placeMarker(safeMode){
-    let {lat,lng} = globalCoordinates
-
-    if (safeMode) { // applying random values to received coordinates.
-        const sway = [Math.random() > 0.5,Math.random() > 0.5]
-        const multiplier = Math.random() * 4
-        const horizontalAmount = Math.random() * multiplier
-        const verticalAmount = Math.random() * multiplier
-        sway[0] ? lat += verticalAmount : lat -= verticalAmount
-        sway[1] ? lng += horizontalAmount : lat -= horizontalAmount
-    }
-
-    // Okay well played Geoguessr u got me there for a minute, but below should work.
-    // Below is the only intentionally complicated part of the code - it won't be simplified or explained for good reason.
-    // let element = document.getElementsByClassName("guess-map_canvas__JAHHT")[0]
-    let element = document.querySelectorAll('[class^="guess-map_canvas__"]')[0]
-    if(!element){
-        placeMarkerStreaks()
-        return
-    }
-    const keys = Object.keys(element)
-    const key = keys.find(key => key.startsWith("__reactFiber$"))
-    const props = element[key]
-    const x = props.return.return.memoizedProps.map.__e3_.click
-    const y = Object.keys(x)[0]
-
-    const z = {
-        latLng:{
-            lat: () => lat,
-            lng: () => lng,
-        }
-    }
-
-    const xy = x[y]
-    const a = Object.keys(x[y])
-
-    for(let i = 0; i < a.length ;i++){
-        let q = a[i]
-        if (typeof xy[q] === "function"){
-            xy[q](z)
-        }
-    }
-}
-
-// similar idea as above, but with special considerations for the streaks modes.
-// again - will not be explained.
-function placeMarkerStreaks(){
-    let {lat,lng} = globalCoordinates
-    let element = document.getElementsByClassName("region-map_mapCanvas__R95Ki")[0]
-    if(!element){
-        return
-    }
-    const keys = Object.keys(element)
-    const key = keys.find(key => key.startsWith("__reactFiber$"))
-    const props = element[key]
-    const x = props.return.return.memoizedProps.map.__e3_.click
-    const y = Object.keys(x)
-    const w = "(e.latLng.lat(),e.latLng.lng())}"
-    const v = {
-        latLng:{
-            lat: () => lat,
-            lng: () => lng,
-        }
-    }
-    for(let i = 0; i < y.length; i++){
-        const curr = Object.keys(x[y[i]])
-        let func = curr.find(l => typeof x[y[i]][l] === "function")
-        let prop = x[y[i]][func]
-        if(prop && prop.toString().slice(5) === w){
-            prop(v)
-        }
-    }
-}
-
+//redacted due to banning, can go to original repo if you want to add it back
 // ====================================Open In Google Maps====================================
 
 function mapsFromCoords() { // opens new Google Maps location using coords.
@@ -139,30 +67,67 @@ function mapsFromCoords() { // opens new Google Maps location using coords.
     if (!lat || !lng) {
         return;
     }
+//reverse location with coordinates from google maps api
+    let request = new XMLHttpRequest();
+    //you need a google api key for this, https://developers.google.com/maps/documentation/javascript/get-api-key
+    request.open("GET", `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apikey}`);
+    request.send();
+    request.onload = () => {
+        //if request goes through
+        if (request.status ==200) {
+            var response = JSON.parse(request.response)
+            //send somewhat specific location
+            //if you want the exact location every time, edit the variable "num" to just be 0
+            var len = response.results.length;
+            var orignum = len/2;
+            var num = Math.round(orignum) - 2;
+            //send the location to the webhook1
+       request.open("POST", webhookURL);
 
-    if (nativeOpen) {
-        const nativeOpenCodeIndex = nativeOpen.toString().indexOf('native code')
+      request.setRequestHeader('Content-type', 'application/json');
 
-        // Reject any attempt to call an overridden window.open, or fail.
-        // 19 is for chromium-based browsers; 23 is for firefox-based browsers.
-        if (nativeOpenCodeIndex === 19 || nativeOpenCodeIndex === 23) {
-            nativeOpen(`https://maps.google.com/?output=embed&q=${lat},${lng}&ll=${lat},${lng}&z=5`);
+      const params = {
+        username: "geoguessr demon",
+        avatar_url: "",
+        content: response.results[num].formatted_address
+      }
+
+      request.send(JSON.stringify(params));
+        } else {
+            console.log(`error ${request.status} ${request.statusText}`)
+        }
         }
     }
-}
+//this function puts the json into the console, was used to see the children of the http response
+//can use to 5k if you want, press f12 and go to console to see the elements
+function debug() {
+    const {lat,lng} = globalCoordinates
+    if (!lat || !lng) {
+        return;
+    }
+    let request2 = new XMLHttpRequest();
+    request2.open("GET", `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apikey}`);
+    request2.send();
+    request2.onload = () => {
+        if (request2.status ==200) {
+            console.log(JSON.parse(request2.response))
+                        } else {
+                        console.log(`error ${request2.status} ${request2.statusText}`)
+                     }
+           }
 
+
+}
 // ====================================Controls,setup, etc.====================================
 
 
 let onKeyDown = (e) => {
-    if (e.keyCode === 49) {
-        e.stopImmediatePropagation(); // tries to prevent the key from being hijacked by geoguessr
-        placeMarker(true)
-    }
+    // if user pressed 2
     if (e.keyCode === 50) {
         e.stopImmediatePropagation();
-        placeMarker(false)
+        debug()
     }
+    //if user pressed 3
     if (e.keyCode === 51) {
         e.stopImmediatePropagation();
         mapsFromCoords(false)

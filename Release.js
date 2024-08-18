@@ -58,7 +58,7 @@ XMLHttpRequest.prototype.open = function(method, url) {
 
 // ====================================Placing Marker====================================
 
-//redacted due to banning, can go to original repo if you want to add it back
+//redacted due to not wanting to use it, add it back if you want but you'll have to go to the bottom and add back the keycodes as well.
 // ====================================Open In Google Maps====================================
 
 function mapsFromCoords() { // opens new Google Maps location using coords.

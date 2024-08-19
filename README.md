@@ -17,7 +17,7 @@ After getting your api key, plug it into the line at the top of the script at "I
 Then, create a webhook in a discord channel. Get the webhook token, then plug it into "INSERT_DISCORD_WEBHOOK_HERE"
 
 ## To use this script:
-- Press '1' to open the Google Maps set on the correct location in a new tab.
+- Press '1' to open the Google Maps set on the correct location in a new tab. (no api or webhook needed)
   
 - Press '2' in game to send the location into the f12 console (google api key needed) 
 

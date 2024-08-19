@@ -140,7 +140,7 @@ function debug() {
 
 let onKeyDown = (e) => {
     //if user presses 1
-    if (e.keyCode === 51) {
+    if (e.keyCode === 49) {
         e.stopImmediatePropagation();
         mapsFromCoords(false)
     }

@@ -11,12 +11,18 @@ This application is a Tampermonkey Script, therefore, you will need to install t
 
 After this, just simply add the code in Release.js as a new script.
 
+To use keys 2 and 3, follow these steps
+Then, create a google api key, following https://developers.google.com/maps/documentation/javascript/get-api-key
+After getting your api key, plug it into the line at the top of the script at "INSERT_GOOGLE_API_KEY_HERE"
+Then, create a webhook in a discord channel. Get the webhook token, then plug it into "INSERT_DISCORD_WEBHOOK_HERE"
+
 ## To use this script:
+- Press '1' to open the Google Maps set on the correct location in a new tab.
+  
+- Press '2' in game to send the location into the f12 console (google api key needed) 
 
-- Press '2' in game to send the location into the f12 console (google api key needed)
-
-- Press '3' in game to send the location to a discord webhook (google api key and discord webhook link needed)
-- To create a google api key, https://developers.google.com/maps/documentation/javascript/get-api-key
+- Press '3' in game to send the location to a discord webhook (google api key and discord webhook link needed) 
+  
 
 ## Credits:
 - https://nominatim.org - For providing an API to use to reverse lookup Latitude and Longitude coordinates.

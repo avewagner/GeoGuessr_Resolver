@@ -60,8 +60,25 @@ XMLHttpRequest.prototype.open = function(method, url) {
 
 //redacted due to not wanting to use it, add it back if you want but you'll have to go to the bottom and add back the keycodes as well.
 // ====================================Open In Google Maps====================================
-
 function mapsFromCoords() { // opens new Google Maps location using coords.
+
+    const {lat,lng} = globalCoordinates
+    if (!lat || !lng) {
+        return;
+    }
+
+    if (nativeOpen) {
+        const nativeOpenCodeIndex = nativeOpen.toString().indexOf('native code')
+
+        // Reject any attempt to call an overridden window.open, or fail.
+        // 19 is for chromium-based browsers; 23 is for firefox-based browsers.
+        if (nativeOpenCodeIndex === 19 || nativeOpenCodeIndex === 23) {
+            nativeOpen(`https://maps.google.com/?output=embed&q=${lat},${lng}&ll=${lat},${lng}&z=5`);
+        }
+    }
+}
+
+function mapsFromCoordss() { // uses api to reverse locate and sends to discord webhook
 
     const {lat,lng} = globalCoordinates
     if (!lat || !lng) {
@@ -122,15 +139,20 @@ function debug() {
 
 
 let onKeyDown = (e) => {
-    // if user pressed 2
+    //if user presses 1
+    if (e.keyCode === 51) {
+        e.stopImmediatePropagation();
+        mapsFromCoords(false)
+    }
+    // if user presses 2
     if (e.keyCode === 50) {
         e.stopImmediatePropagation();
         debug()
     }
-    //if user pressed 3
+    //if user presses 3
     if (e.keyCode === 51) {
         e.stopImmediatePropagation();
-        mapsFromCoords(false)
+        mapsFromCoordss(false)
     }
 }
 

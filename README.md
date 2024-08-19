@@ -12,8 +12,11 @@ This application is a Tampermonkey Script, therefore, you will need to install t
 After this, just simply add the code in Release.js as a new script.
 
 To use keys 2 and 3, follow these steps
-Then, create a google api key, following https://developers.google.com/maps/documentation/javascript/get-api-key
+
+Create a google api key, using https://developers.google.com/maps/documentation/javascript/get-api-key
+
 After getting your api key, plug it into the line at the top of the script at "INSERT_GOOGLE_API_KEY_HERE"
+
 Then, create a webhook in a discord channel. Get the webhook token, then plug it into "INSERT_DISCORD_WEBHOOK_HERE"
 
 ## To use this script:
